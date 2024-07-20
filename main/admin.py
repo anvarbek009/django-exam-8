@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CategoryTransition, PaymentType,Transaction,Wallet
+from .models import CategoryTransition, PaymentType,Transaction,CategoryThings
 from datetime import datetime
 # Register your models here.
 
@@ -72,18 +72,15 @@ class TransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(Transaction, TransactionAdmin)
 
-class WalletAdmin(admin.ModelAdmin):
-    list_display = ('user', 'balance')
-    search_fields = ('user__name', 'balance')
-    list_filter = ('user__created_at',)
-    autocomplete_fields = ['user']
-    readonly_fields = ('balance',)
-    save_on_top = True
-    list_per_page = 20
 
+class CategoryThingsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'image')
+    search_fields = ('name',)
+    list_per_page = 20
+    list_editable = ('image',)
     def save_model(self, request, obj, form, change):
         if not obj.id:
-            obj.user = request.user
+            obj.created_at = datetime.now()
         obj.save()
     
     def get_queryset(self, request):
@@ -92,12 +89,17 @@ class WalletAdmin(admin.ModelAdmin):
             return qs
         else:
             return qs.filter(user=request.user)
-
-
+    
     def has_change_permission(self, request, obj=None):
         if obj:
             return request.user.is_superuser or obj.user == request.user
         else:
             return request.user.is_superuser
 
-admin.site.register(Wallet, WalletAdmin)        
+    def has_delete_permission(self, request, obj=None):
+        if obj:
+            return request.user.is_superuser or obj.user == request.user
+        else:
+            return request.user.is_superuser
+
+admin.site.register(CategoryThings, CategoryThingsAdmin)

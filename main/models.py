@@ -12,6 +12,7 @@ class CategoryTransition(models.Model):
 
 class PaymentType(models.Model):
     name = models.CharField(max_length=100)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=100, decimal_places=2,default=0)
     image=models.ImageField(upload_to='paymenttypes/', blank=True,null=True)
     created_at=models.DateTimeField(auto_now_add=True)
@@ -46,16 +47,4 @@ class Transaction(models.Model):
     
     class Meta:
         db_table = 'transactions'
-
-
-
-class Wallet(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-    def __str__(self):
-        return f'{self.user.name} - Wallet Balance: {self.balance}'
-    
-    class Meta:
-        db_table = 'wallets'
 
