@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TransactionForm, CategoryThingsForm,CategoryTransitionForm,PaymentTypeForm
 from django.views import View
 from django.contrib import messages
+from django.utils import timezone
+from datetime import timedelta
 from django.db.models import Sum
 # Create your views here.
 
@@ -45,7 +47,31 @@ class TransactionCreateView(View):
             return redirect('main:wallet')
         else:
             return render(request, 'main/transaction_create.html', {'form': form})
-        
+class TransactionNewestListView(View):
+    def get(self, request, *args, **kwargs):
+        filter_value = request.GET.get('filter', '')
+
+        if filter_value == 'today':
+            start_date = timezone.now().replace(hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        elif filter_value == 'this_week':
+            start_date = timezone.now() - timedelta(days=timezone.now().weekday())
+            start_date = start_date.replace(hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        elif filter_value == 'this_month':
+            start_date = timezone.now().replace(day=1, hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        else:
+            start_date = None
+            end_date = None
+
+        transactions = Transaction.objects.filter(user=request.user)
+        if start_date and end_date:
+            transactions = transactions.filter(date__range=[start_date, end_date])
+        transactions = transactions.order_by('-date')
+
+        return render(request, 'main/transaction_list_newest.html', {'transactions': transactions})
+    
 class WalletView(LoginRequiredMixin, View):
     def get(self, request):
         payment_types = PaymentType.objects.filter(user=request.user)

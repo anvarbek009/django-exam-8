@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %} Transactions {% endblock %}
+{% block title %} Newest Transactions {% endblock %}
 
 {% block content %}
+<form method="get" action="{% url 'main:transaction_newest_list' %}">
+    <label for="filter">Filter by date:</label>
+    <select name="filter" id="filter">
+        <option value="">All</option>
+        <option value="today">Today</option>
+        <option value="this_week">This Week</option>
+        <option value="this_month">This Month</option>
+    </select>
+    <button type="submit" class="create-card-btn">Apply</button>
+</form>
 
-<h1 data-translate="transactions">Transactions</h1>
+<h1 data-translate="transactions">Newest Transactions</h1>
 <ul class="transaction-list">
-    {% for trans in transaction %}
+    {% for trans in transactions %}
         <li class="transaction-item">
             <p><strong data-translate="amount">Amount:</strong> {{ trans.amount }}</p>
-            <p><strong>Date:</strong> {{ trans.date }}</p>
+            <p><strong>Date:</strong> {{ trans.created_at }}</p>
             <p><strong data-translate="description">Description:</strong> {{ trans.description }}</p>
             {% if trans.image %}
                 <img src="{{ trans.image.url }}" alt="Transaction image" />
@@ -20,5 +30,7 @@
     {% endfor %}
 </ul>
 <a href="{% url 'main:transaction_create' %}" class="create-card-btn"><button data-translate="create_transaction">Create Transaction</button></a>
-<a href="{% url 'main:transaction_list_newest'}">newest</a>
+
+
+
 {% endblock %}
