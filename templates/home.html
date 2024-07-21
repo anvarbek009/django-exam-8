@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1>hello</h1>
+<h1>Category Transitions</h1>
+    <ul class="category-transition-list">
+        {% for transition in category_transition %}
+            <li class="category-transition-item">
+                <a href="{% url 'main:transaction_list' pk=transition.pk %}">
+                    {{ transition.name }}
+                </a>
+            </li>
+        {% empty %}
+            <li class="category-transition-item">No category transitions available.</li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

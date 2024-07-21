@@ -10,5 +10,5 @@
             <li>{{ payment_type.name }} - {{ payment_type.balance }}</li>
         {% endfor %}
     </ul>
-    <a href="{% url 'payment_type_create' %}"><button>Create Plastic Card</button></a>
+    <a href="{% url 'main:payment_type_create' %}"><button>Create Plastic Card</button></a>
 {% endblock %}

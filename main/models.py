@@ -43,7 +43,7 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.name} - {self.category_transition.name} - {self.payment_type.name}'
+        return f'{self.user.username} - {self.category_transition.name} - {self.payment_type.name}'
     
     class Meta:
         db_table = 'transactions'
