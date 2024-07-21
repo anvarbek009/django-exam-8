@@ -12,7 +12,11 @@
             text-decoration: none;
             box-sizing: border-box;
         }
-
+        .container{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
         .message-m {
             position: fixed;
             top: 15px;
@@ -92,10 +96,16 @@
             text-decoration: none;
         }
         .card-profile {
-            max-width: 300px;
+            max-width: 500px;
             margin: 20px auto;
+            height: 700px;
             padding: 20px;
             border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -262,26 +272,312 @@
             margin-top: 10px;
         }
 
+        .wallet-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .total-balance {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .payment-type-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .payment-type-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .payment-type-image {
+            width: 50px; /* Adjust size as needed */
+            height: 50px; /* Adjust size as needed */
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 50%;
+        }
+
+        .payment-type-name {
+            font-weight: bold;
+        }
+
+        .payment-type-balance {
+            margin-left: 10px;
+        }
+
+        .create-card-btn {
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .create-card-btn button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .create-card-btn button:hover {
+            background-color: #0056b3;
+        }
+
+        .payment-type-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+   
+        .payment-type-form-container h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+
+        .payment-type-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-type-form p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .payment-type-form input[type="text"],
+        .payment-type-form input[type="number"],
+        .payment-type-form input[type="file"],
+        .payment-type-form textarea {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .chart-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .black {
+            height: 40px;
+            width: 100px;
+            background-color:darkblue;
+            color: white;
+            border: none;
+            border-radius: 0.50rem;
+        }
+
+        .light {
+            height: 40px;
+            width: 100px;
+            background-color: rgb(91, 222, 255);
+            color: black;
+            border: none;
+            border-radius: 0.50rem;
+        }
+        .black:hover {
+            box-shadow: 10px 8px 16px rgba(0, 0, 0, 0.2);
+            transition: 1s;
+        }
+
+        .light:hover {
+            box-shadow: 10px 8px 16px rgba(0, 0, 0, 0.2);
+            transition: 1s;
+        }
+        .selecttt {
+            width: 100px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 20px;
+            background-color: rgb(0, 0, 0);
+            border: none;
+            color: white;
+        }
     </style>
 </head>
-<body>
+<body class="body">
+    {% if messages %}
+        <div class="message-m">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == 40 %}Important: {% endif %}
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     <header>
         <nav>
             <ul>
-                <li><a href="{% url 'main:home' %}">Home</a></li>
+                <li><a href="{% url 'main:home' %}" data-translate="home">Home</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'main:wallet' %}">Wallet</a></li>
-                    <li><a href="{% url 'users:logout' %}">Logout</a></li>
-                    <li><a href="{% url 'users:profile' %}">Profile</a></li>
+                    <li><a href="{% url 'main:wallet' %}" data-translate="wallet">Wallet</a></li>
+                    <li><a href="{% url 'users:logout' %}" data-translate="logout">Logout</a></li>
+                    <li><a href="{% url 'users:profile' %}" data-translate="profile">Profile</a></li>
                 {% else %}
-                    <li><a href="{% url 'users:login' %}">Login</a></li>
-                    <li><a href="{% url 'users:register' %}">Register</a></li>
+                    <li><a href="{% url 'users:login' %}" data-translate="login">Login</a></li>
+                    <li><a href="{% url 'users:register' %}" data-translate="register">Register</a></li>
                 {% endif %}
+                <li><button class="black" data-translate="black">Black</button></li>
+                <li><button class="light" data-translate="light">White</button></li>
+                <li>
+                    <select class="selecttt" name="" id="language-select">
+                        <option value="eng">Eng</option>
+                        <option value="uz">Uz</option>
+                        <option value="ru">Ru</option>
+                    </select>
+                </li>
             </ul>
         </nav>
     </header>
     
-    {% block content %} {% endblock %}
+    <div class="container">
+        {% block content %} {% endblock %}
+    </div>
+    <script>
+        let qora = document.querySelector('.black')
+        let oq = document.querySelector('.light')
+        let body = document.querySelector('.body')
+        const translations = {
+            uz: {
+                home: "Bosh sahifa",
+                wallet: "Hamyon",
+                logout: "Chiqish",
+                profile: "Profile",
+                black: "To'q ko'k",
+                light: "Och ko'k",  
+                login: "Kirish",
+                register: "Ro'yhattan o'tish",
+                category_transition: "Turkum operatsiyalari",
+                total_balance: "Umumiy balans:",
+                create_card: "Plastik karta yaratish",
+                transactions:"Operatsiyalar",
+                amount:"Miqdori:",
+                description:"Tavsifi:",
+                create_transaction:"Tranzaksiya yaratish",
+                username:"Foydalanuvchi nomi",
+                email:"Elektron pochta",
+                firstname:"Ismi",
+                lastname:"Familiya",
+                editprofile:"Profilni tahrirlash",
+                submit:"Jo'natish"
+            },
+            ru: {
+                home: "Главная страница",
+                wallet: "Кошелек",
+                logout: "Выйти",
+                profile: "Профиль",
+                black: "Темно синий",
+                light: "Светло синий",
+                login:"Авторизоваться",
+                register: "Регистр",
+                category_transition: "Категория транзакции",
+                total_balance: "Итоговый баланс:",
+                create_card: "Создать пластиковую карту",
+                transactions: "Сделки",
+                amount:"Количество:",
+                description:"Описание:",
+                create_transaction:"Создать транзакцию",
+                username:"Имя пользователя",
+                email:"Электронная почта",
+                firstname:"Имя",
+                lastname:"Фамилия",
+                editprofile:"Редактировать профиль",
+                submit:"Отправить"
 
+            },
+            eng: {
+                home: "Main page",
+                wallet: "Wallet",
+                logout: "Logout",
+                profile: "Profile",
+                black: "Dark blue",
+                light: "Light blue",
+                login:"Login",
+                register: "Register",
+                category_transition: "Category transactions",
+                total_balance: "Total balance:",
+                create_card: "Create Plastic Card",
+                transactions:"Transactions",
+                amount:"Amount:",
+                description:"Description:",
+                create_transaction:"Create Transaction",
+                username:"Username",
+                email:"Email",
+                firstname:"First name",
+                lastname:"Last name",
+                editprofile:"Edit Profile",
+                submit:"Submit"
+            },
+        }
+        function getTranslation(key, lang) {
+            return translations[lang][key];
+        }
+
+        function changeLanguage(lang) {
+            const selectedLanguage = document.getElementById('language-select').value;
+            document.documentElement.lang = selectedLanguage;
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = getTranslation(key, selectedLanguage);
+
+            });
+            localStorage.setItem('selectedLanguage', selectedLanguage)
+        }
+        const storedLanguage = localStorage.getItem("selectedLanguage");
+
+
+        if (storedLanguage) {
+            document.getElementById('language-select').value = storedLanguage;
+            changeLanguage();
+        }
+        document.getElementById('language-select').addEventListener('change', changeLanguage)
+        qora.addEventListener('click', () => {
+            body.style.backgroundColor = 'darkblue'
+            body.style.Color='white'
+            bd.style.backgroundColor = 'darkblue'
+        })
+        oq.addEventListener('click', () => {
+            body.style.backgroundColor = 'rgb(70, 218, 244)'
+            bd.style.backgroundColor = 'rgb(70, 218, 244)'
+
+        })
+    </script>
+ 
 </body>
 </html>

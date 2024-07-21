@@ -3,12 +3,24 @@
 {% block title %} Wallet {% endblock %}
 
 {% block content %}
-    <h1>Wallet</h1>
-    <p>Total Balance: {{ balance }}</p>
-    <ul>
-        {% for payment_type in payment_types %}
-            <li>{{ payment_type.name }} - {{ payment_type.balance }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'main:payment_type_create' %}"><button>Create Plastic Card</button></a>
+
+    <div class="wallet-container">
+        <h1 data-translate="wallet">Wallet</h1>
+        <p class="total-balance" ><span data-translate="total_balance">Total Balance: </span> {{ balance }}</p>
+        <ul class="payment-type-list">
+            {% for payment_type in payment_types %}
+                <li class="payment-type-item">
+                    {% if payment_type.image %}
+                        <img src="{{ payment_type.image.url }}" alt="{{ payment_type.name }}" class="payment-type-image">
+                    {% endif %}
+                    <span class="payment-type-name">{{ payment_type.name }}</span> 
+                     
+                    <span class="payment-type-balance">---  {{ payment_type.balance }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'main:payment_type_create' %}" class="create-card-btn">
+            <button data-translate="create_card">Create Plastic Card</button>
+        </a>
+    </div>
 {% endblock %}

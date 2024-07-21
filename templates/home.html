@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1>Category Transitions</h1>
+<h1 data-translate="category_transition">Category transactions</h1>
     <ul class="category-transition-list">
         {% for transition in category_transition %}
             <li class="category-transition-item">
@@ -13,5 +13,5 @@
             <li class="category-transition-item">No category transitions available.</li>
         {% endfor %}
     </ul>
-
+    
 {% endblock %}

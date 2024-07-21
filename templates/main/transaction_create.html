@@ -6,11 +6,11 @@
 {% block content %}
     <div class="login-form-container">
         <div class="login-form">
-            <h1>Create</h1>
+            <h1 data-translate="create_transaction">Create transaction</h1>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit">Submit</button>
+                <button type="submit" data-translate="submit">Submit</button>
             </form>
             <a href="{% url 'main:home' %}">Cancel</a>
         </div>

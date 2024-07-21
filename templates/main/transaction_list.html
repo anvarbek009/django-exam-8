@@ -4,13 +4,13 @@
 
 {% block content %}
 
-<h1>Transactions</h1>
+<h1 data-translate="transactions">Transactions</h1>
 <ul class="transaction-list">
     {% for trans in transaction %}
         <li class="transaction-item">
-            <p><strong>Amount:</strong> {{ trans.amount }}</p>
+            <p><strong data-translate="amount">Amount:</strong> {{ trans.amount }}</p>
             <p><strong>Date:</strong> {{ trans.date }}</p>
-            <p><strong>Description:</strong> {{ trans.description }}</p>
+            <p><strong data-translate="description">Description:</strong> {{ trans.description }}</p>
             {% if trans.image %}
                 <img src="{{ trans.image.url }}" alt="Transaction image" />
             {% endif %}
@@ -19,6 +19,6 @@
         <li>No transactions available for this category.</li>
     {% endfor %}
 </ul>
-<a href="{% url 'main:transaction_create' %}"><button>Create Transaction</button></a>
+<a href="{% url 'main:transaction_create' %}" class="create-card-btn"><button data-translate="create_transaction">Create Transaction</button></a>
 
 {% endblock %}

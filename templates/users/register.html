@@ -7,10 +7,11 @@
 {% block content %}
 <div class="login-form-container">
     <div class="login-form">
+        <h1 data-translate="register">Register</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Submit</button>
+            <button type="submit" data-translate="submit">Submit</button>
         </form>
     </div>
 </div>

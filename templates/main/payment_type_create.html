@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} Create Payment Type {% endblock %}
+
+{% block content %}
+    <div class="payment-type-form-container">
+        <h1>Create Payment Type</h1>
+        <form method="post" enctype="multipart/form-data" class="payment-type-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn" data-translate="submit">Create Payment Type</button>
+        </form>
+    </div>
+{% endblock %}

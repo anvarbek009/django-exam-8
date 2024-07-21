@@ -4,12 +4,12 @@
 {% block content %}
     <div  class="card-profile">
         <img src="{{user.image.url}}" alt="Your image" height="100px">
-        <h2>Username: {{user.username}}</h2>
-        <h3>Email: {{ user.email }}</h3>
-        <h3>First Name: {{ user.first_name }}</h3>
-        <h3>Last Name: {{ user.last_name }}</h3>
+        <h2><span data-translate="username">Username</span>: {{user.username}}</h2>
+        <h3><span data-translate="email">Email</span>: {{ user.email }}</h3>
+        <h3><span data-translate="firstname">First Name</span>: {{ user.first_name }}</h3>
+        <h3><span data-translate="lastname">Last Name</span>: {{ user.last_name }}</h3>
         <button>
-            <a href="{% url 'users:edit_profile' %}">Edit Profile</a>
+            <a href="{% url 'users:edit_profile' %}" data-translate="editprofile">Edit Profile</a>
         </button>
     </div>
 

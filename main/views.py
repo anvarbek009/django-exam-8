@@ -53,13 +53,17 @@ class WalletView(LoginRequiredMixin, View):
         return render(request, 'main/wallet.html', {"payment_types": payment_types, 'balance': balance})
 
 class PaymentTypeCreateView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = PaymentTypeForm()
+        return render(request, 'main/payment_type_create.html', {"form": form})
+
     def post(self, request):
         form = PaymentTypeForm(request.POST, request.FILES)
         if form.is_valid():
             payment_type = form.save(commit=False)
             payment_type.user = request.user
             payment_type.save()
-            return redirect('wallet')
+            return redirect('main:wallet')
         else:
             return render(request, 'main/payment_type_create.html', {"form": form})
         
