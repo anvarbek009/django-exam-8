@@ -40,7 +40,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_editable = ('amount', 'description')
     date_hierarchy = 'date'
     ordering = ('-created_at',)
-    autocomplete_fields = ['user', 'category_transition', 'payment_type']
+    autocomplete_fields = [ 'category_transition', 'payment_type']
     readonly_fields = ('created_at',)
 
     def save_model(self, request, obj, form, change):

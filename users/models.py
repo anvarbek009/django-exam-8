@@ -1,18 +1,32 @@
 from django.db import models
-from django.utils import timezone
-
+from django.contrib.auth.models import AbstractUser,Group,Permission
 # Create your models here.
 
-class User(models.Model):
-    image=models.ImageField(upload_to='profile-images/', blank=True, null=True, default='profile-images/default.png')
-    name = models.CharField(max_length=100)
-    username = models.CharField(max_length=100,unique=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)    
+
+class User(AbstractUser):
+    image = models.ImageField(upload_to='users_images/', blank=True, null=True, default='default_images/user_image.png')
+    
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_set',
+        blank=True,
+        help_text=(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        related_query_name='custom_user',
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_user_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_query_name='custom_user',
+    )
+
+    class Meta:
+        db_table = 'customuser'
 
     def __str__(self):
-        return self.name
-    
-    class Meta:
-        db_table = 'users'
+        return f'{self.username}'

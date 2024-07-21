@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} Wallet {% endblock %}
+
+{% block content %}
+    <h1>Wallet</h1>
+    <p>Total Balance: {{ balance }}</p>
+    <ul>
+        {% for payment_type in payment_types %}
+            <li>{{ payment_type.name }} - {{ payment_type.balance }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'payment_type_create' %}"><button>Create Plastic Card</button></a>
+{% endblock %}

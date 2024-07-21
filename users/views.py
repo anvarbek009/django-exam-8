@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render,redirect
 from .models import User
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
+from django.contrib.auth import login,logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserForm
+from .forms import UserForm, ProfileUpdateForm
 from django.contrib import messages
+# Create your views here.
 
 class RegisterView(View):
     def get(self, request):
@@ -25,9 +26,9 @@ class RegisterView(View):
             context = {
                 'form': create_form
             }
-            messages.error(request, 'Something is wrong! Try again')
+            messages.error(request,'Something is wrong! \nTry again')
             return render(request, 'users/register.html', context=context)
-
+        
 class LoginView(View):
     def get(self, request):
         login_form = AuthenticationForm()
@@ -47,7 +48,9 @@ class LoginView(View):
             context = {
                 'form': login_form
             }
+            messages.error(request, 'Invalid username or password')
             return render(request, 'users/login.html', context=context)
+
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
@@ -55,20 +58,20 @@ class LogoutView(LoginRequiredMixin, View):
         messages.success(request, 'You are now logged out')
         return redirect('main:home')
 
-class ProfileView(LoginRequiredMixin, View):
+class ProfileView(LoginRequiredMixin,View):
     def get(self, request):
-        return render(request, 'users/profile.html', {"user": request.user})
-
+        return render(request, 'users/profile.html',{"user": request.user})
+    
 class UpdateProfileView(LoginRequiredMixin, View):
     def get(self, request):
-        update_form = UserForm(instance=request.user)
+        update_form = ProfileUpdateForm(instance=request.user)
         context = {
             'form': update_form
         }
         return render(request, 'users/update_profile.html', context=context)
-
+    
     def post(self, request):
-        update_form = UserForm(request.POST, request.FILES, instance=request.user)
+        update_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if update_form.is_valid():
             update_form.save()
             messages.success(request, 'Your profile has been updated!')
