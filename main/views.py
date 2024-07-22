@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Sum
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 
 
@@ -16,9 +18,11 @@ class CategoryTransitionView(View):
         category_transition = CategoryTransition.objects.all()
         return render(request, 'home.html', {"category_transition": category_transition})
 
+
 class TransactionView(View):
     def get(self, request, pk):
         transaction = Transaction.objects.filter(category_transition_id=pk)
+
         return render(request, 'main/transaction_list.html', {"transaction": transaction})
 
 class TransactionCreateView(View):
@@ -47,6 +51,7 @@ class TransactionCreateView(View):
             return redirect('main:wallet')
         else:
             return render(request, 'main/transaction_create.html', {'form': form})
+        
 class TransactionNewestListView(View):
     def get(self, request, *args, **kwargs):
         filter_value = request.GET.get('filter', '')
@@ -71,6 +76,21 @@ class TransactionNewestListView(View):
         transactions = transactions.order_by('-date')
 
         return render(request, 'main/transaction_list_newest.html', {'transactions': transactions})
+
+class TransactionUpdateView(View):
+    def get(self, request, pk):
+        transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
+        form = TransactionForm(instance=transaction)
+        return render(request, 'main/transaction_update.html', {'form': form, 'transaction': transaction})
+
+    def post(self, request, pk):
+        transaction = get_object_or_404(Transaction, pk=pk, user=request.user)
+        form = TransactionForm(request.POST, request.FILES, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect('main:transaction_list')
+        return render(request, 'main/transaction_update.html', {'form': form, 'transaction': transaction})
+
     
 class WalletView(LoginRequiredMixin, View):
     def get(self, request):
@@ -92,5 +112,25 @@ class PaymentTypeCreateView(LoginRequiredMixin, View):
             return redirect('main:wallet')
         else:
             return render(request, 'main/payment_type_create.html', {"form": form})
+        
+class PaymentTypeUpdateView(View):
+    def get(self, request, pk):
+        payment_type = get_object_or_404(PaymentType, pk=pk, user=request.user)
+        form = PaymentTypeForm(instance=payment_type)
+        return render(request, 'main/payment_type_update.html', {'form': form, 'payment_type': payment_type})
+
+    def post(self, request, pk):
+        payment_type = get_object_or_404(PaymentType, pk=pk, user=request.user)
+        form = PaymentTypeForm(request.POST, request.FILES, instance=payment_type)
+        if form.is_valid():
+            form.save()
+            return redirect('main:wallet')
+        return render(request, 'main/payment_type_update.html', {'form': form, 'payment_type': payment_type})
+
+class PaymentTypeDeleteView(View):
+    def post(self, request, pk):
+        payment_type = get_object_or_404(PaymentType, pk=pk, user=request.user)
+        payment_type.delete()
+        return redirect('main:wallet')
         
 

@@ -14,11 +14,16 @@
             {% if trans.image %}
                 <img src="{{ trans.image.url }}" alt="Transaction image" />
             {% endif %}
+            <div>
+                <a href="{% url 'main:transaction_update' trans.pk %}" class="update-icon" title="Update">
+                    <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </a>
+
+            </div>
         </li>
     {% empty %}
         <li>No transactions available for this category.</li>
     {% endfor %}
 </ul>
 <a href="{% url 'main:transaction_create' %}" class="create-card-btn"><button data-translate="create_transaction">Create Transaction</button></a>
-<a href="{% url 'main:transaction_list_newest'}">newest</a>
 {% endblock %}

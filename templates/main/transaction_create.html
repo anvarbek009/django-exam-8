@@ -7,7 +7,7 @@
     <div class="login-form-container">
         <div class="login-form">
             <h1 data-translate="create_transaction">Create transaction</h1>
-            <form method="post">
+            <form method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" data-translate="submit">Submit</button>

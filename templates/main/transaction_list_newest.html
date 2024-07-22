@@ -11,7 +11,7 @@
         <option value="this_week">This Week</option>
         <option value="this_month">This Month</option>
     </select>
-    <button type="submit" class="create-card-btn">Apply</button>
+    <button type="submit" class="create-card-bt">Apply</button>
 </form>
 
 <h1 data-translate="transactions">Newest Transactions</h1>
@@ -24,6 +24,12 @@
             {% if trans.image %}
                 <img src="{{ trans.image.url }}" alt="Transaction image" />
             {% endif %}
+            <div>
+                <a href="{% url 'main:transaction_update' trans.pk %}" class="update-icon" title="Update">
+                    <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </a>
+            </div>
+
         </li>
     {% empty %}
         <li>No transactions available for this category.</li>

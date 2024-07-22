@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Hisoblovchi{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
         *{
             margin: 0;
@@ -295,6 +297,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            gap: 10px;
         }
 
         .payment-type-image {
@@ -327,11 +330,21 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
+        .create-card-bt{
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         .create-card-btn button:hover {
             background-color: #0056b3;
         }
-
+        .create-card-bt:hover{
+            background-color: #0056b3;
+        }
         .payment-type-form-container {
             max-width: 600px;
             margin: 0 auto;

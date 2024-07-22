@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 <title>
-    {% block title %} Register{% endblock %}
+    {% block title %} Update {% endblock %}
 </title>
 
 {% block content %}
+
 <div class="login-form-container">
     <div class="login-form">
-        <h1 data-translate="register">Register</h1>
         <form method="post" enctype="multipart/form-data"   >
             {% csrf_token %}
             {{ form.as_p }}

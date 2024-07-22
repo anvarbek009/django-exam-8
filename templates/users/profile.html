@@ -3,7 +3,7 @@
 
 {% block content %}
     <div  class="card-profile">
-        <img src="{{user.image.url}}" alt="Your image" height="100px">
+        <img src="{{ user.image.url }}" alt="Your image" height="100px">
         <h2><span data-translate="username">Username</span>: {{user.username}}</h2>
         <h3><span data-translate="email">Email</span>: {{ user.email }}</h3>
         <h3><span data-translate="firstname">First Name</span>: {{ user.first_name }}</h3>

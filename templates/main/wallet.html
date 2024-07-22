@@ -13,9 +13,17 @@
                     {% if payment_type.image %}
                         <img src="{{ payment_type.image.url }}" alt="{{ payment_type.name }}" class="payment-type-image">
                     {% endif %}
-                    <span class="payment-type-name">{{ payment_type.name }}</span> 
-                     
-                    <span class="payment-type-balance">---  {{ payment_type.balance }}</span>
+                    <span class="payment-type-name">{{ payment_type.name }}</span>  
+                    <span class="payment-type-balance">{{ payment_type.balance }}</span>
+                    <a href="{% url 'main:payment_type_update' payment_type.pk %}" title="Update">
+                        <i class="fa fa-pencil-alt"></i>
+                    </a>
+                    <form method="post" action="{% url 'main:payment_type_delete' payment_type.pk %}" class="delete-form" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-icon" title="Delete" style="background:none; border:none; cursor: pointer;">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>
