@@ -437,6 +437,33 @@
             border: none;
             color: white;
         }
+
+        .statistics-container {
+            padding: 20px;
+        }
+
+        .statistics-summary {
+            margin-bottom: 20px;
+        }
+
+        #chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .view-statistics-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .view-statistics-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body class="body">
@@ -481,6 +508,9 @@
     <div class="container">
         {% block content %} {% endblock %}
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         let qora = document.querySelector('.black')
         let oq = document.querySelector('.light')
@@ -507,7 +537,13 @@
                 firstname:"Ismi",
                 lastname:"Familiya",
                 editprofile:"Profilni tahrirlash",
-                submit:"Jo'natish"
+                submit:"Jo'natish",
+                view_statistics_btn:"Statistikani ko'rish",
+                statistics:"Statistikalar",
+                statistics_overview:"Barcha Statistikalar",
+                used:"Foydalanilgan umumiy miqdor:",
+                received:"Qabul qilingan umumiy miqdor:",
+                filter:"Saralash"
             },
             ru: {
                 home: "Главная страница",
@@ -530,7 +566,13 @@
                 firstname:"Имя",
                 lastname:"Фамилия",
                 editprofile:"Редактировать профиль",
-                submit:"Отправить"
+                submit:"Отправить",
+                view_statistics_btn:"Посмотреть статистику",
+                statistics:"Статистика",
+                statistics_overview:"Общие статистики",
+                used:"Общая использованная сумма:",
+                received:"Общая сумма получена:",
+                filter:"Фильтровать"
 
             },
             eng: {
@@ -554,7 +596,13 @@
                 firstname:"First name",
                 lastname:"Last name",
                 editprofile:"Edit Profile",
-                submit:"Submit"
+                submit:"Submit",
+                view_statistics_btn:"View Statistics",
+                statistics:"Statistics",
+                statistics_overview:"All Statistics",
+                used:"Total Amount Used:",
+                received:"Total Amount Received:",
+                filter:"Filter"
             },
         }
         function getTranslation(key, lang) {
@@ -590,6 +638,41 @@
             bd.style.backgroundColor = 'rgb(70, 218, 244)'
 
         })
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('statistics-chart').getContext('2d');
+
+            // Ensure default values are handled properly
+            var totalUsed = parseFloat('{{ total_used|default:"0" }}') || 0;
+            var totalReceived = parseFloat('{{ total_received|default:"0" }}') || 0;
+
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Used', 'Received'],
+                    datasets: [{
+                        data: [totalUsed, totalReceived],
+                        backgroundColor: ['#ff6384', '#36a2eb'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': $' + tooltipItem.raw.toFixed(2); // Ensure two decimal places
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
     </script>
  
 </body>

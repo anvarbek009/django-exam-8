@@ -25,6 +25,36 @@ class TransactionView(View):
 
         return render(request, 'main/transaction_list.html', {"transaction": transaction})
 
+class StatisticsView(View):
+    def get(self, request):
+        filter_value = request.GET.get('filter', '')
+
+        if filter_value == 'today':
+            start_date = timezone.now().replace(hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        elif filter_value == 'this_week':
+            start_date = timezone.now() - timedelta(days=timezone.now().weekday())
+            start_date = start_date.replace(hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        elif filter_value == 'this_month':
+            start_date = timezone.now().replace(day=1, hour=0, minute=0, second=0)
+            end_date = timezone.now()
+        else:
+            start_date = None
+            end_date = None
+
+        transactions = Transaction.objects.filter(user=request.user)
+        if start_date and end_date:
+            transactions = transactions.filter(date__range=[start_date, end_date])
+
+        total_used = transactions.filter(category_transition__name='Chiqim').aggregate(Sum('amount'))['amount__sum'] or 0
+        total_received = transactions.filter(category_transition__name='Kirim').aggregate(Sum('amount'))['amount__sum'] or 0
+
+        return render(request, 'main/statistics.html', {
+            'total_used': total_used,
+            'total_received': total_received,
+        })
+
 class TransactionCreateView(View):
     def get(self, request):
         form = TransactionForm()

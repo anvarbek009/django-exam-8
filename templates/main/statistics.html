@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+
+<h1 data-translate="statistics">Statistics</h1>
+
+<div class="statistics-container">
+    <h2 data-translate="statistics_overview">Statistics Overview</h2>
+    <div class="statistics-summary">
+        <p><strong data-translate="used">Total Amount Used:</strong> {{ total_used }}</p>
+        <p><strong data-translate="received">Total Amount Received:</strong> {{ total_received }}</p>
+    </div>
+
+
+    <div id="chart-container">
+        <canvas id="statistics-chart"></canvas>
+    </div>
+</div>
+
+{% endblock %}

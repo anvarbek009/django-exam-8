@@ -12,7 +12,12 @@
         {% empty %}
             <li class="category-transition-item">No category transitions available.</li>
         {% endfor %}
-        <li class="category-transition-item"><a href="{% url 'main:transaction_newest_list' %}">Filter</a></li>
+        <li class="category-transition-item"><a href="{% url 'main:transaction_newest_list' %}" data-translate="filter">Filter</a></li>
+        <li class="category-transition-item">
+            <a href="{% url 'main:statistics' %}"  data-translate="view_statistics_btn">
+                    View Statistics
+            </a>
+        </li>
     </ul>
     
 {% endblock %}
