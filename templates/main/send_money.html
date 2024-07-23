@@ -1,0 +1,42 @@
+    {% extends 'base.html' %}
+
+{% block title %}Send Money{% endblock %}
+
+{% block content %}
+<div class="send-money-container">
+    <h1 data-translate="send_money">Send Money</h1>
+    <form id="send-money-form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="recipient">Recipient:</label>
+            <select name="recipient" id="recipient" required>
+                <option value="">Select a user</option>
+                {% for user in users %}
+                    <option value="{{ user.username }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="sender_payment_type">Your Payment Type:</label>
+            <select name="sender_payment_type" id="sender_payment_type" required>
+                <option value="">Select your payment type</option>
+                {% for payment_type in sender_payment_types %}
+                    <option value="{{ payment_type.id }}">{{ payment_type.name }} (Balance: $ {{ payment_type.balance }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="recipient_payment_type">Recipient's Payment Type:</label>
+            <select name="recipient_payment_type" id="recipient_payment_type" required>
+                <option value="">Select recipient's payment type</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="amount" data-translate="amount">Amount:</label>
+            <input type="number" name="amount" id="amount" step="0.01" required>
+        </div>
+        <button type="submit" data-translate="send_money">Send Money</button>
+    </form>
+    <div id="feedback"></div>
+</div>
+{% endblock %}

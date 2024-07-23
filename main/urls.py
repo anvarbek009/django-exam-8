@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryTransitionView, WalletView, TransactionCreateView, TransactionView, PaymentTypeCreateView,TransactionNewestListView,TransactionUpdateView,PaymentTypeDeleteView,PaymentTypeUpdateView,StatisticsView
+from .views import CategoryTransitionView, WalletView, TransactionCreateView, TransactionView, PaymentTypeCreateView,TransactionNewestListView,TransactionUpdateView,PaymentTypeDeleteView,PaymentTypeUpdateView,StatisticsView,SendMoneyView,get_payment_types
 
 app_name = 'main'
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('payment_type/update/<int:pk>/', PaymentTypeUpdateView.as_view(), name='payment_type_update'),
     path('payment_type/delete/<int:pk>/', PaymentTypeDeleteView.as_view(), name='payment_type_delete'),
     path('statistics/', StatisticsView.as_view(), name='statistics'),
+    path('send-money/', SendMoneyView.as_view(), name='send_money'),
+    path('get_payment_types/', get_payment_types, name='get_payment_types'),
 ]

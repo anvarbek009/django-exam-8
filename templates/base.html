@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Hisoblovchi{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <style>
         *{
@@ -464,6 +465,56 @@
         .view-statistics-btn:hover {
             background-color: #0056b3;
         }
+
+        /* CSS for Send Money form */
+        .send-money-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .send-money-container h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #send-money-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #send-money-form button:hover {
+            background-color: #218838;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="body">
@@ -510,6 +561,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         let qora = document.querySelector('.black')
@@ -543,7 +595,8 @@
                 statistics_overview:"Barcha Statistikalar",
                 used:"Foydalanilgan umumiy miqdor:",
                 received:"Qabul qilingan umumiy miqdor:",
-                filter:"Saralash"
+                filter:"Saralash",
+                send_money:"Pul o'tkazish"
             },
             ru: {
                 home: "Главная страница",
@@ -572,7 +625,8 @@
                 statistics_overview:"Общие статистики",
                 used:"Общая использованная сумма:",
                 received:"Общая сумма получена:",
-                filter:"Фильтровать"
+                filter:"Фильтровать",
+                send_money:"Перевести деньги"
 
             },
             eng: {
@@ -602,7 +656,8 @@
                 statistics_overview:"All Statistics",
                 used:"Total Amount Used:",
                 received:"Total Amount Received:",
-                filter:"Filter"
+                filter:"Filter",
+                send_money:"Send Money"
             },
         }
         function getTranslation(key, lang) {
@@ -671,6 +726,55 @@
                         }
                     }
                 }
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('send-money-form');
+            var recipientSelect = document.getElementById('recipient');
+            var recipientPaymentTypeSelect = document.getElementById('recipient_payment_type');
+            
+            recipientSelect.addEventListener('change', function() {
+                var recipientUsername = recipientSelect.value;
+                if (recipientUsername) {
+                    fetch(`/get_payment_types/?username=${recipientUsername}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            recipientPaymentTypeSelect.innerHTML = '<option value="">Select recipient\'s payment type</option>';
+                            data.payment_types.forEach(function(paymentType) {
+                                var option = document.createElement('option');
+                                option.value = paymentType.id;
+                                option.textContent = `${paymentType.name} (Balance: ${paymentType.balance})`;
+                                recipientPaymentTypeSelect.appendChild(option);
+                            });
+                        });
+                } else {
+                    recipientPaymentTypeSelect.innerHTML = '<option value="">Select recipient\'s payment type</option>';
+                }
+            });
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+
+                var formData = new FormData(form);
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch("{% url 'main:send_money' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    var feedback = document.getElementById('feedback');
+                    feedback.innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             });
         });
     </script>

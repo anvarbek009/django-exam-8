@@ -8,7 +8,7 @@
 <ul class="transaction-list">
     {% for trans in transaction %}
         <li class="transaction-item">
-            <p><strong data-translate="amount">Amount:</strong> {{ trans.amount }}</p>
+            <p><strong data-translate="amount">Amount:</strong> $ {{ trans.amount }}</p>
             <p><strong>Date:</strong> {{ trans.date }}</p>
             <p><strong data-translate="description">Description:</strong> {{ trans.description }}</p>
             {% if trans.image %}

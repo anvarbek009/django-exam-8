@@ -9,7 +9,13 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from users.models import User
 from django.urls import reverse
+from django.http import JsonResponse
+from datetime import datetime, timedelta
+
 # Create your views here.
 
 
@@ -55,23 +61,26 @@ class StatisticsView(View):
             'total_received': total_received,
         })
 
+
+@method_decorator(login_required, name='dispatch')
 class TransactionCreateView(View):
     def get(self, request):
-        form = TransactionForm()
-        return render(request, 'main/transaction_create.html', {'form': form})  
+        form = TransactionForm(user=request.user)
+        return render(request, 'main/transaction_create.html', {'form': form})
+
     def post(self, request):
-        form = TransactionForm(request.POST, request.FILES)
+        form = TransactionForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.save()
 
             if transaction.category_transition.name == 'Chiqim':
-                payment_type = get_object_or_404(PaymentType, id=transaction.payment_type.id)
+                payment_type = get_object_or_404(PaymentType, id=transaction.payment_type.id, user=request.user)
                 payment_type.balance -= transaction.amount
                 payment_type.save()
             elif transaction.category_transition.name == 'Kirim':
-                payment_type = get_object_or_404(PaymentType, id=transaction.payment_type.id)
+                payment_type = get_object_or_404(PaymentType, id=transaction.payment_type.id, user=request.user)
                 payment_type.balance += transaction.amount
                 payment_type.save()
 
@@ -82,9 +91,11 @@ class TransactionCreateView(View):
         else:
             return render(request, 'main/transaction_create.html', {'form': form})
         
+
 class TransactionNewestListView(View):
     def get(self, request, *args, **kwargs):
         filter_value = request.GET.get('filter', '')
+        date_str = request.GET.get('date', '')
 
         if filter_value == 'today':
             start_date = timezone.now().replace(hour=0, minute=0, second=0)
@@ -96,6 +107,13 @@ class TransactionNewestListView(View):
         elif filter_value == 'this_month':
             start_date = timezone.now().replace(day=1, hour=0, minute=0, second=0)
             end_date = timezone.now()
+        elif date_str:
+            try:
+                selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                start_date = timezone.make_aware(datetime.combine(selected_date, datetime.min.time()))
+                end_date = timezone.make_aware(datetime.combine(selected_date, datetime.max.time()))
+            except ValueError:
+                start_date = end_date = None
         else:
             start_date = None
             end_date = None
@@ -163,4 +181,58 @@ class PaymentTypeDeleteView(View):
         payment_type.delete()
         return redirect('main:wallet')
         
+@method_decorator(login_required, name='dispatch')
+class SendMoneyView(View):
+    def get(self, request):
+        users = User.objects.exclude(id=request.user.id)
+        sender_payment_types = PaymentType.objects.filter(user=request.user)
+        return render(request, 'main/send_money.html', {
+            'users': users,
+            'sender_payment_types': sender_payment_types
+        })
+
+    def post(self, request):
+        recipient_username = request.POST.get('recipient')
+        amount = int(request.POST.get('amount'))
+        sender_payment_type_id = request.POST.get('sender_payment_type')
+        recipient_payment_type_id = request.POST.get('recipient_payment_type')
+
+        try:
+            recipient = User.objects.get(username=recipient_username)
+            sender_payment_type = PaymentType.objects.get(id=sender_payment_type_id, user=request.user)
+            recipient_payment_type = PaymentType.objects.get(id=recipient_payment_type_id, user=recipient)
+            
+            if sender_payment_type.balance < amount:
+                messages.error(request, "Insufficient balance.")
+                return redirect('main:send_money')
+            
+            sender_payment_type.balance -= amount
+            recipient_payment_type.balance += amount
+            sender_payment_type.save()
+            recipient_payment_type.save()
+            
+            messages.success(request, "Money sent successfully.")
+            return redirect('main:home')
+        
+        except User.DoesNotExist:
+            messages.error(request, "Recipient not found.")
+            return redirect('main:send_money')
+        except PaymentType.DoesNotExist:
+            messages.error(request, "Invalid payment type selected.")
+            return redirect('main:send_money')
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('main:send_money')
+        
+
+@login_required
+def get_payment_types(request):
+    username = request.GET.get('username')
+    try:
+        user = User.objects.get(username=username)
+        payment_types = PaymentType.objects.filter(user=user)
+        data = [{'id': pt.id, 'name': pt.name, 'balance': pt.balance} for pt in payment_types]
+        return JsonResponse({'payment_types': data})
+    except User.DoesNotExist:
+        return JsonResponse({'payment_types': []})
 

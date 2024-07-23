@@ -3,12 +3,21 @@
 {% block content %}
 
 <h1 data-translate="statistics">Statistics</h1>
-
+<form method="get" action="{% url 'main:statistics' %}">
+    <label for="filter">Filter by date:</label>
+    <select name="filter" id="filter">
+        <option value="">All</option>
+        <option value="today">Today</option>
+        <option value="this_week">This Week</option>
+        <option value="this_month">This Month</option>
+    </select>
+    <button type="submit" class="create-card-bt">Apply</button>
+</form>
 <div class="statistics-container">
     <h2 data-translate="statistics_overview">Statistics Overview</h2>
     <div class="statistics-summary">
-        <p><strong data-translate="used">Total Amount Used:</strong> {{ total_used }}</p>
-        <p><strong data-translate="received">Total Amount Received:</strong> {{ total_received }}</p>
+        <p><strong data-translate="used">Total Amount Used:</strong> $ {{ total_used }}</p>
+        <p><strong data-translate="received">Total Amount Received:</strong> $ {{ total_received }}</p>
     </div>
 
 
