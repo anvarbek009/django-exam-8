@@ -4,14 +4,14 @@
 
 <h1 data-translate="statistics">Statistics</h1>
 <form method="get" action="{% url 'main:statistics' %}">
-    <label for="filter">Filter by date:</label>
+    <label for="filter" data-translate="filter">Filter by date:</label>
     <select name="filter" id="filter">
-        <option value="">All</option>
-        <option value="today">Today</option>
-        <option value="this_week">This Week</option>
-        <option value="this_month">This Month</option>
+        <option value="" data-translate="all">All</option>
+        <option value="today" data-translate="today">Today</option>
+        <option value="this_week" data-translate="week">This Week</option>
+        <option value="this_month" data-translate="month">This Month</option>
     </select>
-    <button type="submit" class="create-card-bt">Apply</button>
+    <button type="submit" class="create-card-bt" data-translate="filter" > Apply</button>
 </form>
 <div class="statistics-container">
     <h2 data-translate="statistics_overview">Statistics Overview</h2>

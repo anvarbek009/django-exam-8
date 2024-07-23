@@ -6,14 +6,14 @@
 <h1 data-translate="transactions">Transactions</h1>
 
 <form method="get" action="{% url 'main:transaction_newest_list' %}">
-    <label for="filter">Filter by:</label>
+    <label for="filter" data-translate="filter">Filter by:</label>
     <select name="filter" id="filter">
-        <option value="">All</option>
-        <option value="today">Today</option>
-        <option value="this_week">This Week</option>
-        <option value="this_month">This Month</option>
+        <option value="" data-translate="all">All</option>
+        <option value="today" data-translate="today">Today</option>
+        <option value="this_week" data-translate="week">This Week</option>
+        <option value="this_month" data-translate="month">This Month</option>
     </select>
-    <label for="date-picker">Or select a date:</label>
+    <label for="date-picker" data-translate="or_select">Or select a date:</label>
     <input type="text" id="date-picker" name="date" placeholder="Select a date" style="width: 100px; height: 30px; padding:10px;  border-radius: 5px; background-color: white; font-size: 13px;" >
     <button type="submit" data-translate="filter" class="create-card-bt">Filter</button>
 </form>
@@ -22,14 +22,14 @@
     {% for trans in transactions %}
         <li class="transaction-item">
             <p><strong data-translate="amount">Amount:</strong> {{ trans.amount }}</p>
-            <p><strong>Date:</strong> {{ trans.date }}</p>
+            <p><strong data-translate="date">Date:</strong> {{ trans.date }}</p>
             <p><strong data-translate="description">Description:</strong> {{ trans.description }}</p>
             {% if trans.image %}
                 <img src="{{ trans.image.url }}" alt="Transaction image">
             {% endif %}
         </li>
     {% empty %}
-        <li>No transactions available for this category.</li>
+        <li data-translate="not_transaction">No transactions available for this category.</li>
     {% endfor %}
 </ul>
 
