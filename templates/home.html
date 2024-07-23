@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+{% if user.is_authenticated %}
 <h1 data-translate="category_transition">Category transactions</h1>
     <ul class="category-transition-list">
         {% for transition in category_transition %}
@@ -19,5 +20,7 @@
             </a>
         </li>
     </ul>
-    
+{%else%}
+<h1>You need to login</h1>
+{% endif %}
 {% endblock %}

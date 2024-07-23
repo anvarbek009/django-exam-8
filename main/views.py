@@ -19,9 +19,9 @@ class CategoryTransitionView(View):
         return render(request, 'home.html', {"category_transition": category_transition})
 
 
-class TransactionView(View):
+class TransactionView(View,LoginRequiredMixin):
     def get(self, request, pk):
-        transaction = Transaction.objects.filter(category_transition_id=pk)
+        transaction = Transaction.objects.filter(user=request.user,category_transition_id=pk)
 
         return render(request, 'main/transaction_list.html', {"transaction": transaction})
 
